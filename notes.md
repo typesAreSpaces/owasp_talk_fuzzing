@@ -70,7 +70,19 @@ The most common bugs found are related to assumptions on how the data will be pr
 
 ## Simple examples
 
--   Use `radamsa` with `bc` and `jq`
+-   Using `radamsa` with  `jq`
+
+    jq . test.json # Test if a json file is valid
+    radamsa test.json | jq
+
+    while true; do
+      radamsa test.json > input.txt
+      jq . input.txt > /dev/null 2>&1
+      if [ $? -gt 127 ]; then
+        cp input.txt crash-`date +s%.%N`.txt
+        echo "Crash found!"
+      fi
+    done
 
 
 # libFuzzer - Coverage guided fuzzing
@@ -149,4 +161,6 @@ Test cases as seeds
 -   Sometimes, it might not provide any insights about issues in code
 
 -   Definitely a strong tool if paired with debuggers, code tracers, etc
+
+-   Many tools avaiable! Find the ones that suit your workflow
 

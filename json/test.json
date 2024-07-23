@@ -1,0 +1,7 @@
+{
+  "test": "test",
+  "array": [
+    "item1: foo",
+    "item2: bar"
+  ]
+}

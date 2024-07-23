@@ -32,13 +32,13 @@
 <h2 class="author">Jose Abel Castellanos Joo</h2><h2 class="date">July 23, 2024</h2>
 </section>
 <section>
-<section id="slide-orge1f0809">
-<h2 id="orge1f0809"><span class="section-number-2">1.</span> What's fuzzing?</h2>
+<section id="slide-org3e86913">
+<h2 id="org3e86913"><span class="section-number-2">1.</span> What's fuzzing?</h2>
 <div class="outline-text-2" id="text-1">
 </div>
 </section>
-<section id="slide-org5cbb875">
-<h3 id="org5cbb875"><span class="section-number-3">1.1.</span> Historical context</h3>
+<section id="slide-org366c8d1">
+<h3 id="org366c8d1"><span class="section-number-3">1.1.</span> Historical context</h3>
 <ul>
 <li>Researchers wanted to test the reliability of standard UNIX programs.</li>
 <li>Formal methods were [and still are] not easy to apply to large systems.</li>
@@ -53,7 +53,7 @@
 
 </ul>
 </section>
-<section id="slide-org5cbb875-split">
+<section id="slide-org366c8d1-split">
 
 <h3><span class="section-number-3">1.1</span> Historical context</h3>
 <p>
@@ -70,7 +70,7 @@ It motivated the approach for software testing:
 
 </ul>
 </section>
-<section id="slide-org5cbb875-split">
+<section id="slide-org366c8d1-split">
 
 <h3><span class="section-number-3">1.1</span> Historical context</h3>
 <p>
@@ -82,15 +82,15 @@ A program is detected as faulty only if it crashes or hangs (loops indefinitely)
 
 </ul>
 </section>
-<section id="slide-org1e32784">
-<h3 id="org1e32784"><span class="section-number-3">1.2.</span> Definition</h3>
+<section id="slide-org46f22de">
+<h3 id="org46f22de"><span class="section-number-3">1.2.</span> Definition</h3>
 <ul>
 <li>A fuzzer is a program which injects automatically semi-random data into a program/stack and detect bugs.</li>
 <li>(Original concept from paper) Fuzzing is an approach to test the robustness of software applications using two programs: fuzz and ptyji</li>
 
 </ul>
 </section>
-<section id="slide-org1e32784-split">
+<section id="slide-org46f22de-split">
 
 <h3><span class="section-number-3">1.2</span> Definition</h3>
 <ul>
@@ -111,8 +111,8 @@ A program is detected as faulty only if it crashes or hangs (loops indefinitely)
 
 </ul>
 </section>
-<section id="slide-org219c0f8">
-<h3 id="org219c0f8"><span class="section-number-3">1.3.</span> Why is this approach useful?</h3>
+<section id="slide-orgd8b9f1b">
+<h3 id="orgd8b9f1b"><span class="section-number-3">1.3.</span> Why is this approach useful?</h3>
 <p>
 The most common bugs found are related to assumptions on how the data will be presented and not enforcing additional checks for the latter. These were the following and/or associated to the following:
 </p>
@@ -131,8 +131,8 @@ The most common bugs found are related to assumptions on how the data will be pr
 </section>
 </section>
 <section>
-<section id="slide-orgfcad20b">
-<h2 id="orgfcad20b"><span class="section-number-2">2.</span> Radamsa - Blackbox fuzzing</h2>
+<section id="slide-orgfb30dc8">
+<h2 id="orgfb30dc8"><span class="section-number-2">2.</span> Radamsa - Blackbox fuzzing</h2>
 <ul>
 <li><a href="https://gitlab.com/akihe/radamsa">Repo</a></li>
 <li>Installation:</li>
@@ -147,8 +147,8 @@ sudo make install
 </code></pre>
 </div>
 </section>
-<section id="slide-org38472b1">
-<h3 id="org38472b1"><span class="section-number-3">2.1.</span> Basic usage</h3>
+<section id="slide-orgf571a62">
+<h3 id="orgf571a62"><span class="section-number-3">2.1.</span> Basic usage</h3>
 <ul>
 <li>How to use radamsa (as pipeline and reading files)</li>
 
@@ -159,17 +159,35 @@ sudo make install
 </code></pre>
 </div>
 </section>
-<section id="slide-orgf81f15f">
-<h3 id="orgf81f15f"><span class="section-number-3">2.2.</span> Simple examples</h3>
+<section id="slide-orgf26fee7">
+<h3 id="orgf26fee7"><span class="section-number-3">2.2.</span> Simple examples</h3>
 <ul>
-<li>Use <code class="src src-sh">radamsa</code> with <code class="src src-sh">bc</code> and <code class="src src-sh">jq</code></li>
+<li>Using <code class="src src-sh">radamsa</code> with  <code class="src src-sh">jq</code></li>
 
 </ul>
+<div class="org-src-container">
+
+<pre  class="src src-bash"   ><code trim>jq . test.json # Test if a json file is valid
+radamsa test.json | jq
+</code></pre>
+</div>
+<div class="org-src-container">
+
+<pre  class="fragment"   ><code trim>while true; do
+  radamsa test.json &gt; input.txt
+  jq . input.txt &gt; /dev/null 2&gt;&amp;1
+  if [ $? -gt 127 ]; then
+    cp input.txt crash-`date +s%.%N`.txt
+    echo "Crash found!"
+  fi
+done
+</code></pre>
+</div>
 </section>
 </section>
 <section>
-<section id="slide-org94892af">
-<h2 id="org94892af"><span class="section-number-2">3.</span> libFuzzer - Coverage guided fuzzing</h2>
+<section id="slide-org44ffd36">
+<h2 id="org44ffd36"><span class="section-number-2">3.</span> libFuzzer - Coverage guided fuzzing</h2>
 <p>
 libFuzzer comes installed with clang
 </p>
@@ -185,8 +203,8 @@ libFuzzer comes installed with clang
 
 </ul>
 </section>
-<section id="slide-org06c0da3">
-<h3 id="org06c0da3"><span class="section-number-3">3.1.</span> Step 1: implement `fuzz target`,</h3>
+<section id="slide-org754b7bb">
+<h3 id="org754b7bb"><span class="section-number-3">3.1.</span> Step 1: implement `fuzz target`,</h3>
 <p>
 A function that accepts an array of bytes and does something interesting with these bytes using the API under test.
 </p>
@@ -200,8 +218,8 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 </code></pre>
 </div>
 </section>
-<section id="slide-org7a20a59">
-<h3 id="org7a20a59"><span class="section-number-3">3.2.</span> Some requirements of the `fuzz target` function</h3>
+<section id="slide-org0bc6c8f">
+<h3 id="org0bc6c8f"><span class="section-number-3">3.2.</span> Some requirements of the `fuzz target` function</h3>
 <ul>
 <li>The fuzzing engine will execute the fuzz target many times with different inputs in the same process.</li>
 <li>It must tolerate any kind of input (empty, huge, malformed, etc).</li>
@@ -211,7 +229,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 
 </ul>
 </section>
-<section id="slide-org7a20a59-split">
+<section id="slide-org0bc6c8f-split">
 <ul>
 <li>It must be fast. Try avoiding cubic or greater complexity, logging, or excessive memory consumption.</li>
 <li>Ideally, it should not modify any global state (although that’s not strict).</li>
@@ -219,8 +237,8 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 
 </ul>
 </section>
-<section id="slide-orgcfd7fde">
-<h3 id="orgcfd7fde"><span class="section-number-3">3.3.</span> Step 2: Fuzzer Usage</h3>
+<section id="slide-org9812947">
+<h3 id="org9812947"><span class="section-number-3">3.3.</span> Step 2: Fuzzer Usage</h3>
 <p>
 Build program with fuzzing options:
 </p>
@@ -233,14 +251,14 @@ clang -g -O1 -fsanitize=fuzzer,memory                  mytarget.c # Builds the f
 </code></pre>
 </div>
 </section>
-<section id="slide-orge126b4c">
-<h3 id="orge126b4c"><span class="section-number-3">3.4.</span> Step 3: Define corpus</h3>
+<section id="slide-org7d66675">
+<h3 id="org7d66675"><span class="section-number-3">3.4.</span> Step 3: Define corpus</h3>
 <p>
 Test cases as seeds
 </p>
 </section>
-<section id="slide-org21c53c1">
-<h3 id="org21c53c1"><span class="section-number-3">3.5.</span> Hello-world example:</h3>
+<section id="slide-orga9fd594">
+<h3 id="orga9fd594"><span class="section-number-3">3.5.</span> Hello-world example:</h3>
 <div class="org-src-container">
 
 <pre  class="src src-bash"   ><code trim>/opt/homebrew/opt/llvm/bin/clang++ -g -fsanitize=address,fuzzer tutorial/libFuzzer/fuzz_me.cc -o fuzz_test  
@@ -248,16 +266,16 @@ Test cases as seeds
 </code></pre>
 </div>
 </section>
-<section id="slide-org1b1705c">
-<h3 id="org1b1705c"><span class="section-number-3">3.6.</span> Heartbleed example:</h3>
+<section id="slide-org75bf489">
+<h3 id="org75bf489"><span class="section-number-3">3.6.</span> Heartbleed example:</h3>
 
-<div id="org8c8b4ee" class="figure">
+<div id="orgd917456" class="figure">
 <p><img src="./figures/Simplified_Heartbleed_explanation.svg.png" alt="Simplified_Heartbleed_explanation.svg.png" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Heartbleed explanation</p>
 </div>
 </section>
-<section id="slide-org1b1705c-split">
+<section id="slide-org75bf489-split">
 
 <h3><span class="section-number-3">3.6</span> Heartbleed example:</h3>
 <ul>
@@ -274,8 +292,8 @@ Test cases as seeds
 </section>
 </section>
 <section>
-<section id="slide-org703a250">
-<h2 id="org703a250"><span class="section-number-2">4.</span> Conclusions</h2>
+<section id="slide-orgcb6a0fb">
+<h2 id="orgcb6a0fb"><span class="section-number-2">4.</span> Conclusions</h2>
 <ul>
 <li>Fuzzing can be very useful as a cheap technique to discover bugs</li>
 
@@ -290,6 +308,10 @@ Test cases as seeds
 </ul>
 <ul class="fragment">
 <li>Definitely a strong tool if paired with debuggers, code tracers, etc</li>
+
+</ul>
+<ul class="fragment">
+<li>Many tools avaiable! Find the ones that suit your workflow</li>
 
 </ul>
 </section>

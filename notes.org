@@ -59,7 +59,22 @@ The most common bugs found are related to assumptions on how the data will be pr
   echo "Hello, world!" | radamsa
 #+end_src
 ** Simple examples
-- Use src_sh[:exports code]{radamsa} with src_sh[:exports code]{bc} and src_sh[:exports code]{jq}
+- Using src_sh[:exports code]{radamsa} with  src_sh[:exports code]{jq}
+#+begin_src bash 
+  jq . test.json # Test if a json file is valid
+  radamsa test.json | jq
+#+end_src
+#+ATTR_REVEAL: :frag t
+#+begin_src bash 
+  while true; do
+    radamsa test.json > input.txt
+    jq . input.txt > /dev/null 2>&1
+    if [ $? -gt 127 ]; then
+      cp input.txt crash-`date +s%.%N`.txt
+      echo "Crash found!"
+    fi
+  done
+#+end_src
 * libFuzzer - Coverage guided fuzzing
 libFuzzer comes installed with clang
 - On mac: src_sh[:exports code]{brew install llvm}
@@ -120,3 +135,5 @@ Test cases as seeds
 - Sometimes, it might not provide any insights about issues in code
 #+ATTR_REVEAL: :frag t
 - Definitely a strong tool if paired with debuggers, code tracers, etc
+#+ATTR_REVEAL: :frag t
+- Many tools avaiable! Find the ones that suit your workflow
